@@ -1,0 +1,13 @@
+- name: Create user
+  become: true
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    groups: "{{ groups }}"
+    append: true
+    password_lock: true
+
+- name: Add SSH public key for user
+  ansible.posix.authorized_key:
+    user: "{{ user_name }}"
+    key: "{{ key }}"
+    state: present
