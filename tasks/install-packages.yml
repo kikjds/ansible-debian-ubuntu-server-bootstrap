@@ -1,0 +1,5 @@
+- name: Install packages
+  ansible.builtin.apt:
+    name: "{{ bootstrap_packages }}"
+    state: present
+    update_cache: true
