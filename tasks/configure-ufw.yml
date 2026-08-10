@@ -1,0 +1,17 @@
+- name: Allow HTTPS
+  community.general.ufw:
+    port: "443"
+    proto: tcp
+    rule: allow
+
+- name: Allow SSH
+  community.general.ufw:
+    port: "22"
+    proto: tcp
+    rule: allow
+
+- name: Enable UFW with deny incoming policy
+  community.general.ufw:
+    state: enabled
+    policy: deny
+    direction: incoming
