@@ -1,3 +1,7 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # defaults file for ansible-debian-ubuntu-server-bootstrap
+bootstrap_packages:
+  - ufw
+  - git
+  - nginx
