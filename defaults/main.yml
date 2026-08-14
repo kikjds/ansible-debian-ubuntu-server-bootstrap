@@ -5,3 +5,4 @@ bootstrap_packages:
   - ufw
   - git
   - nginx
+  - fail2ban
