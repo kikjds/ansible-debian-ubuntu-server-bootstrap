@@ -6,3 +6,20 @@ bootstrap_packages:
   - git
   - nginx
   - fail2ban
+
+bootstrap_install_docker: true
+
+docker_apt_architectures:
+  x86_64: amd64
+  aarch64: arm64
+  armv7l: armhf
+
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+  - docker-buildx-plugin
+  - docker-compose-plugin
+
+# Users in this list can access the Docker daemon without sudo.
+docker_users: []
