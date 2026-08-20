@@ -23,3 +23,6 @@ docker_packages:
 
 # Users in this list can access the Docker daemon without sudo.
 docker_users: []
+
+# Users to create. Each item requires a name and may set groups and ssh_public_key.
+bootstrap_users: []

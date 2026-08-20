@@ -1,13 +1,21 @@
-- name: Create user
+- name: Create configured users
   become: true
   ansible.builtin.user:
-    name: "{{ user_name }}"
-    groups: "{{ groups }}"
+    name: "{{ item.name }}"
+    groups: "{{ item.groups | default([]) }}"
     append: true
     password_lock: true
-
-- name: Add SSH public key for user
-  ansible.posix.authorized_key:
-    user: "{{ user_name }}"
-    key: "{{ key }}"
     state: present
+  loop: "{{ bootstrap_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Add SSH public keys for configured users
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.ssh_public_key }}"
+    state: present
+  loop: "{{ bootstrap_users }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: item.ssh_public_key is defined
