@@ -1,38 +1,48 @@
-Role Name
-=========
+# Ansible Debian/Ubuntu Server Bootstrap
 
-A brief description of the role goes here.
+Bootstraps Debian and Ubuntu servers with baseline packages, a restrictive UFW policy, optional Docker Engine installation, and optional local users.
 
-Requirements
-------------
+## Requirements
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+- Ansible 2.14 or later.
+- A Debian or Ubuntu target with APT and privilege escalation available.
+- Install the required collections before running the role:
 
-Role Variables
---------------
+  ```shell
+  ansible-galaxy collection install -r requirements.yml
+  ```
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Docker installation uses Docker's official APT repository and requires outbound HTTPS access.
 
-Dependencies
-------------
+## Role Variables
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+| Variable | Default | Description |
+| --- | --- | --- |
+| `bootstrap_packages` | `ufw`, `git`, `nginx`, `fail2ban` | Packages installed from the distribution APT repositories. |
+| `bootstrap_install_docker` | `true` | Installs Docker Engine and enables its service. |
+| `docker_apt_architectures` | x86_64, aarch64, armv7l mappings | Maps Ansible architecture facts to Docker's APT architecture names. |
+| `docker_packages` | Docker Engine packages | Docker packages installed from Docker's official repository. |
+| `docker_users` | `[]` | Existing users added to the `docker` group. |
+| `bootstrap_users` | `[]` | Users to create. Each item requires `name`; `groups` and `ssh_public_key` are optional. |
 
-Example Playbook
-----------------
+UFW allows TCP ports 22 and 443, then enables a deny-incoming policy. Ensure SSH uses port 22 or extend the firewall configuration before running this role remotely.
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+## Example Playbook
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+- hosts: servers
+  become: true
+  roles:
+    - role: ansible-debian-ubuntu-server-bootstrap
+      docker_users:
+        - deploy
+      bootstrap_users:
+        - name: deploy
+          groups:
+            - sudo
+          ssh_public_key: "ssh-ed25519 AAAA... deploy@example.com"
+```
 
-License
--------
+## License
 
-MIT
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+MIT-0
