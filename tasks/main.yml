@@ -1,3 +1,7 @@
 #SPDX-License-Identifier: MIT-0
 ---
 # tasks file for ansible-debian-ubuntu-server-bootstrap
+- { name: Install baseline packages, ansible.builtin.import_tasks: install-packages.yml }
+- { name: Configure firewall, ansible.builtin.import_tasks: configure-ufw.yml }
+- { name: Install Docker, ansible.builtin.import_tasks: docker.yml, when: "bootstrap_install_docker | bool" }
+- { name: Configure users, ansible.builtin.import_tasks: user.yml, when: "bootstrap_users | length > 0" }
